@@ -12,19 +12,27 @@ def get_ip_addresses(hostname, port, username, password):
         # 连接到服务器
         client.connect(hostname, port=port, username=username, password=password)
         
-        # 执行命令获取内网IP
+        # 执行命令获取内网IPv4
         stdin, stdout, stderr = client.exec_command("hostname -I | awk '{print $1}'")
-        internal_ip = stdout.read().decode().strip()
+        internal_ipv4 = stdout.read().decode().strip()
         
-        # 执行命令获取公网IP
-        stdin, stdout, stderr = client.exec_command("curl -s ifconfig.me")
-        public_ip = stdout.read().decode().strip()
+        # 执行命令获取内网IPv6
+        stdin, stdout, stderr = client.exec_command("hostname -I | awk '{print $2}'")
+        internal_ipv6 = stdout.read().decode().strip()
+        
+        # 执行命令获取公网IPv4
+        stdin, stdout, stderr = client.exec_command("curl -s4 ifconfig.me")
+        public_ipv4 = stdout.read().decode().strip()
+        
+        # 执行命令获取公网IPv6
+        stdin, stdout, stderr = client.exec_command("curl -s6 ifconfig.me")
+        public_ipv6 = stdout.read().decode().strip()
         
         client.close()
         
-        return internal_ip, public_ip
+        return internal_ipv4, internal_ipv6, public_ipv4, public_ipv6
     except Exception as e:
-        return str(e), str(e)
+        return str(e), str(e), str(e), str(e)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -34,11 +42,13 @@ def index():
         username = request.form['username']
         password = request.form['password']
         
-        internal_ip, public_ip = get_ip_addresses(hostname, port, username, password)
+        internal_ipv4, internal_ipv6, public_ipv4, public_ipv6 = get_ip_addresses(hostname, port, username, password)
         
         return jsonify({
-            'internal_ip': internal_ip,
-            'public_ip': public_ip
+            'internal_ipv4': internal_ipv4,
+            'internal_ipv6': internal_ipv6,
+            'public_ipv4': public_ipv4,
+            'public_ipv6': public_ipv6
         })
     
     return render_template('index.html')
