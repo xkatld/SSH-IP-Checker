@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH IP 查询工具</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>SSH IP 查询工具</h1>
+    <form id="ssh-form">
+        <div class="form-group">
+            <label for="hostname">主机名</label>
+            <input type="text" id="hostname" placeholder="请输入主机名" required>
+        </div>
+        <div class="form-group">
+            <label for="port">端口</label>
+            <input type="number" id="port" placeholder="请输入端口号" required>
+        </div>
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" placeholder="请输入用户名" required>
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" placeholder="请输入密码" required>
+        </div>
+        <button type="submit">获取 IP 地址</button>
+    </form>
+    <div id="result"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
